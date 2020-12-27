@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class SceneExtension : MonoBehaviour
 {
-    [SerializeField] GameObject[] GrassCliffCoin;
-    [SerializeField] GameObject Chest;
-    [SerializeField] Sprite test;
+    [SerializeField] GameObject[] grassCliffCoin;
+    //[SerializeField] Sprite CoinSprite; //換圖片用 38~45行
     // Start is called before the first frame update
     void Start()
     {
@@ -23,27 +22,22 @@ public class SceneExtension : MonoBehaviour
         if (collision.name == "End")//當碰撞器碰到End的時候
         {
             GameObject clone;
-            if (collision.tag == "Coin")
-            {
-                GameObject.Find("Chest");
-            }
+
             if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                clone = Instantiate(GrassCliffCoin[Random.Range(0,GrassCliffCoin.Length)],//隨機生成陣列中的遊戲物件         
+                clone = Instantiate(grassCliffCoin[Random.Range(0,grassCliffCoin.Length)],//隨機生成陣列中的遊戲物件         
                     collision.transform.position, Quaternion.identity);
                 //                      座標      角度.歸零 改成collision.transform.rotation依據當前角度
                 clone.name = "GrassCliff";
                 
 
                 
-                /*Score[] scores = clone.GetComponentsInChildren<Score>();
-                GameObject[] test = GameObject.FindGameObjectsWithTag("Chest");
-                Chest = GameObject.Find("Chest");
+                /*Score[] scores = clone.GetComponentsInChildren<Score>();//抓有掛Score腳本元件的
                 for(int i = 0; i< 3; i++)
                 {
                     int index = Random.Range(0, scores.Length);
-                    test[index]= Chest;
-                    //scores[index].GetComponent<SpriteRenderer>().sprite = test;
+                    scores[index].GetComponent<SpriteRenderer>().sprite = CoinSprite;//將這物件的圖片更換成CoinSprite
+                    //            抓元件      <圖片渲染器>    ().附檔名?= 要換成的圖片
                     scores[index].name = "Chest";
                 }*/
             }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ChestControl : MonoBehaviour
 {
-    private Animator ChestAnimator;
+    private Animator chestAnimator;
     bool IsOpen=false;
     // Start is called before the first frame update
     void Start()
     {
-        ChestAnimator = GetComponent<Animator>();
+        chestAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class ChestControl : MonoBehaviour
     {
         if (collision.tag == "Boy"&&IsOpen==false)
         {
-            ChestAnimator.SetTrigger("BoyTrigger");
+            chestAnimator.SetTrigger("BoyTrigger");
             IsOpen = true;
         }
     }

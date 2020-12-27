@@ -21,5 +21,9 @@ public class SceneDestroy : MonoBehaviour
         {
             Destroy(collision.transform.root.gameObject);
         }
+        if (collision.name == "Chest")
+        {
+            Destroy(collision.transform.root.gameObject);
+        }
     }
 }

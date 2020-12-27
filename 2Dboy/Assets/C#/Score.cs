@@ -4,25 +4,22 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] GameObject coin;
-    [SerializeField] GameObject chest;
+    [SerializeField] GameObject coin;//給金幣物件
+    [SerializeField] GameObject chest;//給寶箱
     // Start is called before the first frame update
     void Start()
     {
         int index = Random.Range(0, 10);
-        GameObject G8der;
-        if (index >= 5)
+        GameObject ScoreGenerate;
+        if (index >= 4)
         {
-            G8der=Instantiate(coin,this.gameObject.transform.position, Quaternion.identity);
-            G8der.transform.parent = this.gameObject.transform;
-            //G8der.transform.position = Vector3.zero;
+            ScoreGenerate = Instantiate(coin,gameObject.transform.position, Quaternion.identity);
+          //                實例化函數 (要生成的物件,生成位置,生成的角度)
         }
         else
         {
-            G8der=Instantiate(chest,this.gameObject.transform.position, Quaternion.identity);
-            G8der.transform.parent = this.gameObject.transform;
-            //G8der.transform.position = Vector3.zero;
-        }
+            ScoreGenerate = Instantiate(chest,gameObject.transform.position+ new Vector3(0, -0.5f, 0), Quaternion.identity);
+        }//                                                                  降低寶箱高度0.5f
     }
 
     // Update is called once per frame
