@@ -15,10 +15,9 @@ public class BoyDown : MonoBehaviour
     {
         
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)//身體碰到障礙物後墜落
     {
         Collider2D[] colliders = transform.root.GetComponentsInChildren<Collider2D>();
-        //                                 回最高級 抓所有子物件的Component<要抓的對象> 
         for(int i = 0; i< colliders.Length; i++)
         {
             colliders[i].isTrigger = true;

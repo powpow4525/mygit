@@ -7,11 +7,14 @@ public class ReSet : MonoBehaviour
 {
     [SerializeField] GameObject reSetButton;
     [SerializeField] BoyControl boyControl;
-    [SerializeField] GameObject start;
+    [SerializeField] GameObject youDied;
+    [SerializeField] GameObject bg;
+    [SerializeField] GameObject speedUp;
+    [SerializeField] GameObject jump;
     // Start is called before the first frame update
     void Start()
     {
-        Time.timeScale = 1;
+
     }
 
     // Update is called once per frame
@@ -19,15 +22,18 @@ public class ReSet : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)//角色死亡處理
     {
         boyControl.SaveHighScore();//呼叫腳本BoyControl裡的SaveHighScore
-        Time.timeScale = 0;
-        start.SetActive(true);
         reSetButton.SetActive(true);
+        bg.SetActive(false);
+        youDied.SetActive(true);
+        speedUp.SetActive(false);
+        jump.SetActive(false);
+        Time.timeScale = 0;
     }
-    public void RePlay()
+    public void RePlay()//重新載入場景
     {
-        SceneManager.LoadScene("Game");//讀取名為Game的場景  
+        SceneManager.LoadScene("Game");
     }
 }

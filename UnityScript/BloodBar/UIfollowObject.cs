@@ -15,6 +15,6 @@ public class UIfollowObject : MonoBehaviour
     void Update()
     {
         transform.position = Camera.main.WorldToScreenPoint(target.position);
-	    本體座標	       = 遊戲座標轉螢幕座標		       (要跟隨物體的座標)
+	    //本體座標	       = 遊戲座標轉螢幕座標		       (要跟隨物體的座標)
     }
 }

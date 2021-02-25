@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets._2D;//使用assetstore的類型
+using UnityStandardAssets._2D;//使用assetstore的腳本
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class BoyControl : MonoBehaviour
 {
@@ -15,72 +16,102 @@ public class BoyControl : MonoBehaviour
     [SerializeField] Animator checkGround;//確認是否在地上
     [SerializeField] Text textTotalScore;
     [SerializeField] Text textHighScore;
+    [SerializeField] GameObject[] mobileBotton;//隱藏手機端按鈕用
     // Start is called before the first frame update
     int HighScore;
     void Start()
     {
-        rigidbody.centerOfMass = centerOfMass.localPosition;
-        //Position前+local取到本地座標 不要取世界座標
+        rigidbody.centerOfMass = centerOfMass.localPosition;//設定角色重心
 
-        if(PlayerPrefs.HasKey("High Score"))//HasKey:判斷有沒有名為High Score的Key 有就回傳true
+        if(PlayerPrefs.HasKey("High Score"))//讀取最高分數
         {
-            HighScore = PlayerPrefs.GetInt("High Score");//SetInt則是儲存 可換String Float
+            HighScore = PlayerPrefs.GetInt("High Score");
             textHighScore.text = "最高分數 : " + HighScore;
+        }
+        if(Application.isMobilePlatform)//判斷是否要隱藏手機端按鈕
+            for(int i = 0; i < mobileBotton.Length; i++)
+            {
+                mobileBotton[i].SetActive(true);
+            }
+        else
+        {
+            for (int i = 0; i < mobileBotton.Length; i++)
+            {
+                mobileBotton[i].SetActive(false);
+            }
         }
     }
     float speed;
+    bool isSpeedup;
     bool isJump;
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (!EventSystem.current.IsPointerOverGameObject())//滑鼠不在UI上時才能操作
         {
-            speed = Mathf.Lerp(speed, 1, 0.1f);//線性差值函式
-        }//  改成-=可以倒退     速度上限 每次變化量
+            if (!Application.isMobilePlatform)//不是手機端才能PC操作
+            {
+                isSpeedup = Input.GetMouseButton(0);
+                isJump = Input.GetMouseButtonDown(1);
+            }
+        }
+        if (isSpeedup)//移動與跳躍
+        {
+            speed = Mathf.Lerp(speed, 1, 0.1f);
+        }
         else
         {
             speed = Mathf.Lerp(speed, 0.5f, 0.1f);
         }
-        isJump = Input.GetMouseButtonDown(1);
-        if (isJump&&checkGround.GetBool("Ground"))//角色動畫裡的Ground為1的時候才執行
+        if (isJump && checkGround.GetBool("Ground"))
         {
             audioJump.Play();
         }
-        character.Move(speed, false, isJump);//用UnityStandardAssets._2D類型中的MOVE函式
-        //             橫向移動 蹲下 跳躍
+        character.Move(speed, false, isJump);
+        isJump = false;
+    }
+    
+    public void Speedup()//手機端移動與跳躍
+    {
+        isSpeedup = true;
+    }
+    public void SpeedNormal()
+    {
+        isSpeedup = false;
+    }
+    public void Jump()
+    {
+        isJump = true;
     }
     int TotalScore = 0;
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)//獲得分數與顯示
     {
-        if (collision.tag == "Coin")
+        if (collision.tag == "Coin")//金幣
         {
             TotalScore += 1;
             audioCoin.Play();
             Destroy(collision.gameObject);
-        }else if (collision.tag == "Chest")
+        }else if (collision.tag == "Chest")//寶箱
         {
             TotalScore += 10;
             audioChest.Play();
         }
-        textTotalScore.text = "當前分數 : " + TotalScore;
+        textTotalScore.text = "當前分數 : " + TotalScore;//顯示分數
         if (HighScore < TotalScore)
         {
             HighScore = TotalScore;
             textHighScore.text = "突破最高 : " + HighScore;
-            //PlayerPrefs.SetInt("High Score", HighScore);     存檔 : 這程式寫在Update會不停的寫入磁碟 很傷硬碟
-            //                  ("要儲存的Kye",要儲存的值)
         }
     } 
-    public void SaveHighScore()//創一個公開方法讓別的腳本(EX:ReSet)來存檔
+    public void SaveHighScore()//讓別的腳本(ReSet)來存檔分數
     {
         PlayerPrefs.SetInt("High Score", HighScore);
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)//碰到障礙物後墜落
     {
         if(collision.gameObject.tag=="Obstacle")
         {
-            Collider2D[] colliders = GetComponentsInChildren<Collider2D>();//GetComponentsInChildren<Collider2D>() 抓其所有子物件的Collider2D
-            //因為這腳本掛在此物件最高級了 所以不用再加transform.root
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
             for (int i = 0; i < colliders.Length; i++)
             {
                 colliders[i].isTrigger = true;

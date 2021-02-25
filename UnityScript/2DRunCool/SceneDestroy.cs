@@ -15,9 +15,13 @@ public class SceneDestroy : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)//移除不用的地板與寶箱
     {
         if (collision.name == "End")
+        {
+            Destroy(collision.transform.root.gameObject);
+        }
+        if (collision.name == "Chest")
         {
             Destroy(collision.transform.root.gameObject);
         }
